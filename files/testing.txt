@@ -1,0 +1,2 @@
+Testing printf function.
+50 9.50
