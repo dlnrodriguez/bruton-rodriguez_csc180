@@ -1,0 +1,8 @@
+/*
+ * NULL = Null Object
+ * U404 = Unknown Error
+ * INIT = Initialization Error
+ * LOAD = Load Error
+ * FRMT = Formatting Error
+ */
+

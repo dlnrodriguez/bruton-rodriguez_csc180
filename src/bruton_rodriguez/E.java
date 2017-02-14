@@ -38,6 +38,7 @@ public abstract class E {
 
             try {
                 stream = new PrintStream(new FileOutputStream(fileName), true);
+                dictionary();
                 return this;
             } catch (IOException e) {
                 System.err.printf("File \'%s\' not found.", fileName);
@@ -45,13 +46,24 @@ public abstract class E {
             }
         }
 
+        private void dictionary() {
+            stream.println("/*");
+            for (ERR e : ERR.values()) stream.printf(" * %s = %s\n", e.name(), e);
+            stream.println(" */\n");
+        }
+
+        // print formatted
         public PrintStream printf(String format, Object... args) {
             return stream.printf(format + '\n', args);
         }
 
-        public PrintStream printe(Enum e, String format, Object... args) {
-            if (e instanceof ERR) stream.printf("> { %s } - ", e);
-            else stream.printf("[ %s ] - ", e);
+        // print message
+        public PrintStream printm(Enum e, Class c, String format, Object... args) {
+            // if the provided enum is a known error, give
+            // it special formatting and provide the in
+            // which the error occurred
+            if (e instanceof ERR) stream.printf("* { %s, %s.class } - ", e.name(), c.getSimpleName());
+            else stream.printf("[ %s ] - ", e.name());
             return stream.printf(format + '\n', args);
         }
     }

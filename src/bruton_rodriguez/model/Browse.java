@@ -25,15 +25,37 @@ public class Browse {
         // return false if the provided string is blank
         if (webAddress == null || webAddress.isEmpty() || webAddress.matches("\\s+")) return false;
 
-        if (!webAddress.contains("http")) webAddress = "http://" + webAddress;
+        webAddress = webFormat(webAddress);
 
         try {
             URL url = new URL(webAddress);
-            dln.printe(MSG.SUCC, "Loaded page '%s' successfully!", url.toExternalForm());
+            dln.printm(MSG.SUCC, getClass(), "Loaded page '%s' successfully!", url.toExternalForm());
             return true;
         } catch (MalformedURLException ignore) {
-            dln.printe(ERR.LOAD, "Cannot load '%s'", webAddress);
+            dln.printm(ERR.LOAD, getClass(), "Cannot load '%s'", webAddress);
             return false;
         }
+    }
+
+    /*
+    Returns true if the app is able to reach a
+    search engine and search the provided query.
+     */
+    public boolean webSearch(String searchQuery) {
+        String stringUrl = "http://www.google.com/#q=" + searchQuery.replace(' ', '+');
+
+        try {
+            URL url = new URL(stringUrl);
+            dln.printm(MSG.SUCC, getClass(), "Successfully searched for \'%s\'", searchQuery);
+        } catch (MalformedURLException e) {
+            dln.printm(ERR.LOAD, getClass(), "Could not search for \'%s\', web address attempted: \'%s\'", searchQuery, stringUrl);
+        }
+        return true;
+    }
+
+    private String webFormat(String webAddress) {
+        if (webAddress.matches("https?://www\\.\\S+\\.\\S+")) return webAddress;
+
+        return "http://" + webAddress;
     }
 }

@@ -1,2 +1,10 @@
+/*
+ * NULL = Null Object
+ * U404 = Unknown Error
+ * INIT = Initialization Error
+ * LOAD = Load Error
+ * FRMT = Formatting Error
+ */
+
 Browse was initialized.
 [ SUCC ] - Loaded page 'http://www.google.com' successfully!
