@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * Created by dylonrodriguez on 2/13/17.
- *
- * Writes messages to a file.
+ * Writes messages to a single file.
  */
 public class Print {
     private static PrintStream printStream;
@@ -19,10 +19,12 @@ public class Print {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static PrintStream initialize(String fileName) {
+        // If "fileName" contains a folder name, sure that
+        // the appropriate folders are created.
         if (fileName.contains("/")) {
-            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(?<folder>.+/).+").matcher(fileName);
+            Matcher matcher = Pattern.compile("(?<folder>.+/).+").matcher(fileName);
             matcher.matches();
-            new java.io.File(matcher.group("folder")).mkdir();
+            new File(matcher.group("folder")).mkdirs();
         }
 
         try {
@@ -35,11 +37,12 @@ public class Print {
     }
 
     public PrintStream printf(String format, Object ... args) {
-        return printStream.printf(format, args);
+        return printStream.printf(format + '\n', args);
     }
 
     public PrintStream printe(Enum e, String format, Object ... args) {
-        printStream.printf("{ %s } - ", e);
-        return printStream.printf(format, args);
+        if (e instanceof ERR) printStream.printf("> { %s } - ", e); // "ERR" is a known error type.
+        else printStream.printf("[ %s ] - ", e);
+        return printStream.printf(format + '\n', args);
     }
 }

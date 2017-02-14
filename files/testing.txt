@@ -1,2 +1,1 @@
-Testing printf function.
-50 9.50
+Hello world!

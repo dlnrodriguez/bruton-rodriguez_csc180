@@ -1,18 +1,16 @@
 package bruton_rodriguez.controller;
 
 import bruton_rodriguez.developer.Print;
+import bruton_rodriguez.model.Browser_browse;
 
 /**
- * Created by dylonrodriguez on 2/13/17.
+ * Handles instances of necessary components for
+ * making the final application run.
  */
 public class Browser_engine {
-    public void setup(String fileName) {
-        java.io.PrintStream stream = Print.initialize(fileName);
-        if (stream == null) {
-            System.err.println("could not continue");
-            return;
-        }
-        Print out = new Print(stream);
-        out.printf("Testing printf function.\n%d %.2f", 50, 9.5f);
+    public void beginEngine() {
+        Print out = new Print(Print.initialize("files/testing.txt"));
+        out.printf("Hello world!");
+        Browser_browse browser = new Browser_browse();
     }
 }
