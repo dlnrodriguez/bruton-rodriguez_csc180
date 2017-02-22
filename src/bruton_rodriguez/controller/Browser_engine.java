@@ -12,6 +12,6 @@ public class Browser_engine {
         Print out = new Print(Print.initialize("files/testing.txt"));
         out.printf("Hello world!");
         Browse browser = new Browse();
-        browser.loadPage("www.google.com");
+        browser.loadableOrSearchable("http://www.google.com/");
     }
 }
