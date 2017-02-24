@@ -7,4 +7,4 @@
  */
 
 Browse was initialized.
-* { FRMT, Browse.class } - URL 'http://www.google.com/'
+[ SUCC ] - Loaded page 'http://www.google.com' successfully!
