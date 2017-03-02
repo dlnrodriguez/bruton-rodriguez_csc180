@@ -10,6 +10,7 @@ import bruton_rodriguez.view.Window;
  */
 public class Browser_engine implements Runnable {
     private static Window window;
+    private static Listeners listener;
 
     public void beginEngine() {
         Print out = new Print(Print.initialize("files/testing.txt"));
@@ -17,16 +18,22 @@ public class Browser_engine implements Runnable {
 
         Browse browser = new Browse();
         run();
-        browser.loadableOrSearchable("http://www.google.com/");
+        //browser.loadableOrSearchable("http://100.000.000.244");
+        //browser.loadableOrSearchable("https://www.google.com/search?q=neumont+university&rlz=1C5CHFA_enUS717US717&oq=neumont+unive&aqs=chrome.0.0j69i60l3j0l2.7607j0j7&sourceid=chrome&ie=UTF-8");
     }
 
     @Override
     public void run() {
+        listener = new Listeners();
         window = new Window();
         window.setTitle("New Browser");
     }
 
     public static Window getWindow() {
         return window;
+    }
+
+    public static Listeners getListener() {
+        return listener;
     }
 }

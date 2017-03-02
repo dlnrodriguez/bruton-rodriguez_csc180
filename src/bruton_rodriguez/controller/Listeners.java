@@ -1,26 +1,25 @@
 package bruton_rodriguez.controller;
 
 import bruton_rodriguez.model.Browse;
+import bruton_rodriguez.view.TaskBar;
 import bruton_rodriguez.view.Window;
+import bruton_rodriguez.view.gui.Head;
 import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 /**
  * Created by dylonrodriguez on 2/23/17.
  */
 public class Listeners implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
-    private Object listener_type;
-
-    public Listeners(Object listener_type) {
-        this.listener_type = listener_type;
-    }
+    private int px, py;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Browse.loadPage("http://www.neumont.edu");
+
     }
 
     @Override
@@ -40,18 +39,18 @@ public class Listeners implements ActionListener, MouseListener, MouseMotionList
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (listener_type instanceof JButton) {
-            if (((JButton) listener_type).getName().equals("close")) {
-                Browser_engine.getWindow().dispatchEvent(new WindowEvent(Browser_engine.getWindow(), WindowEvent.WINDOW_CLOSING));
-            } else if (((JButton) listener_type).getName().equals("go")) {
-                Platform.runLater(() -> Browse.loadPage("http://www.google.com"));
+        if (e.getComponent() instanceof JButton) {
+            JButton t = (JButton) e.getComponent();
+            if (t.getName().equals("go")) {
+                Platform.runLater(() -> Browse.loadPage(Browser_engine.getWindow().url()));
             }
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        px = e.getXOnScreen();
+        py = e.getYOnScreen();
     }
 
     @Override
@@ -71,10 +70,17 @@ public class Listeners implements ActionListener, MouseListener, MouseMotionList
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (listener_type instanceof JFrame) {
-            ((JFrame) listener_type).setLocation(e.getLocationOnScreen());
+        if (e.getComponent().getName().equals("title_bar")) {
+            int x = e.getXOnScreen(), y = e.getYOnScreen();
+            int dx = (int) (Browser_engine.getWindow().getLocationOnScreen().getX() + x - px);
+            int dy = (int) (Browser_engine.getWindow().getLocationOnScreen().getY() + y - py);
+
+            Browser_engine.getWindow().setLocation(dx, dy);
+
+            px = x;
+            py = y;
         } else {
-            System.out.println("mouse dragged");
+            //System.out.println(e.getComponent().getName());
         }
     }
 

@@ -22,8 +22,7 @@ public class Browse {
     }
 
     public void loadableOrSearchable(String s) {
-//        if (s.contains(" ")) return webSearch(s);
-//        return loadPage(s) != null;
+        getUrl(s);
     }
 
     /**
@@ -72,7 +71,7 @@ public class Browse {
 
         // any combinations of letters, digits, plus,
         // period, and hyphen.
-        String scheme = "(?<scheme>\\p{Alnum}[\\p{Alnum}+.\\-]+)";
+        String scheme = "(?<scheme>\\p{Alnum}[\\p{Alnum}+.\\-]+):";
 
         // username and password separated by a colon and
         // followed by an at symbol. (optional)
@@ -81,52 +80,55 @@ public class Browse {
         // hostname or ip address. IPv4 must be in
         // dot-decimal notation. IPv6 must be enclosed in
         // brackets.
-        String hostname = "(?<hostname>\\S)";
+        String hostname = "(?<hostname>[\\p{Alnum}\\-+]+)";
         String host_ipv4 = "(?<hostipv4>(\\d{1,3}\\.){3}\\d{1,3})";
         String host_ipv6 = "(?<hostipv6>(\\[\\d]))";
-        //String host = hostname + '|' + host_ipv4 + '|' + host_ipv6;
-        String host = ".*";
+
+        String host = "(?<host>" + hostname + '|' + host_ipv4 + '|' + host_ipv6 + ')';
+        //String host = "(?<host>" + hostname + ')';
 
         // port number. (optional)
-        String port = "(?<portnumber>:\\d+)?";
+        String port = "(?<portnumber>:\\d{0,3}\\.)?";
 
         //
-        String path = "(?<path>(\\S+)?)";
+        String path = "(?<path>(\\S+))";
 
         //
-        String query = "(?<query>(\\?\\S+)?)";
+        String query = "(?<query>(\\?\\S+))?";
 
         //
-        String fragment = "(?<fragment>(#\\S+)?)";
+        String fragment = "(?<fragment>(#\\S+))?";
 
         //
         String authority = user_password + host + port;
 
-        Pattern f = Pattern.compile(scheme + "(//)?" + authority + "/?" + path + query + fragment);
-        if (f.matcher(webAddress).matches()) return webAddress;
-
+        Pattern f = Pattern.compile(scheme + "(//)?(" + authority + "/)?" + path + query + fragment);
         java.util.regex.Matcher matcher = f.matcher(webAddress);
 
-        dln.printm(ERR.FRMT, Browse.class, "URL '%s'", webAddress);
+        if (matcher.matches()) {
+            dln.printf(webAddress + "\n" +
+                               "\tscheme = '%s'\n" +
+                               "\tusername = '%s'\n" +
+                               "\tpassword = '%s'\n" +
+                               "\thost = '%s'\n" +
+                               "\tport_number = '%s'\n" +
+                               "\tpath = '%s'\n" +
+                               "\tquery = '%s'\n" +
+                               "\tfragment = '%s'\n"
+                       //////////////////////////////
+                    , matcher.group("scheme")
+                    , matcher.group("username")
+                    , matcher.group("password")
+                    , matcher.group("host")
+                    , matcher.group("portnumber")
+                    , matcher.group("path")
+                    , matcher.group("query")
+                    , matcher.group("fragment"));
 
-        dln.printf("" +
-                        "\tscheme = '%s'\n" +
-                        "\tusername = '%s'\n" +
-                        "\tpassword = '%s'\n" +
-                        "\thost = '%s'" +
-                        "\tport_number = '%s'\n" +
-                        "\tpath = '%s'\n" +
-                        "\tquery = '%s'\n" +
-                        "\tfragment = '%s'\n"
-                //////////////////////////////
-                , matcher.group("scheme")
-                , matcher.group("username")
-                , matcher.group("password")
-                , matcher.group("host")
-                , matcher.group("portnumber")
-                , matcher.group("path")
-                , matcher.group("query")
-                , matcher.group("fragment"));
+            return webAddress;
+        }
+
+        dln.printm(ERR.FRMT, Browse.class, "URL '%s'", webAddress);
 
         return "http://" + webAddress;
     }
