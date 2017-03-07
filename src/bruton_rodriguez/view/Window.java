@@ -1,7 +1,6 @@
 package bruton_rodriguez.view;
 
 import bruton_rodriguez.controller.Browser_engine;
-import bruton_rodriguez.controller.Listeners;
 import bruton_rodriguez.view.gui.Head;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -25,6 +24,7 @@ public class Window extends JFrame implements Runnable {
     public Window() {
         init();
         addKeyListener(Browser_engine.getListener());
+        addWindowListener(Browser_engine.getListener());
     }
 
     private boolean init() {
@@ -45,11 +45,12 @@ public class Window extends JFrame implements Runnable {
     private void initialize_view() {
         Platform.runLater(this);
         add(head, BorderLayout.PAGE_START);
+        add(new JSeparator(SwingConstants.VERTICAL), BorderLayout.AFTER_LAST_LINE);
         add(webDisplay, BorderLayout.CENTER);
     }
 
-    public String url() {
-        return head.getNextUrl();
+    public String getUrl() {
+        return head.getToolbar().getUrlBar();
     }
 
     @Override
@@ -57,10 +58,14 @@ public class Window extends JFrame implements Runnable {
         WebView webView = new WebView();
         webEngine = webView.getEngine();
 
+        webEngine.titleProperty().addListener((a, b, c) -> SwingUtilities.invokeLater(() -> head.getToolbar().setIcn()));
         webEngine.titleProperty().addListener((a, b, c) -> SwingUtilities.invokeLater(() -> head.setTitle(c)));
-
         //webEngine.setOnStatusChanged((e) -> SwingUtilities.invokeLater(() -> label.setText(e.getData())));
         webEngine.locationProperty().addListener((a, b, c) -> SwingUtilities.invokeLater(() -> pageDetails.setText(c)));
         webDisplay.setScene(new Scene(webView));
+    }
+
+    public static WebEngine getWebEngine() {
+        return webEngine;
     }
 }

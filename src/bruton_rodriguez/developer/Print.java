@@ -41,8 +41,8 @@ public class Print {
     }
 
     public PrintStream printe(Enum e, String format, Object ... args) {
-        if (e instanceof ERR) printStream.printf("> { %s } - ", e); // "ERR" is a known error type.
-        else printStream.printf("[ %s ] - ", e);
+        if (e instanceof ERR) printStream.printf("* { %s } - ", e); // provided enum is a known error type.
+        else printStream.printf(" %-3s - ", e);
         return printStream.printf(format + '\n', args);
     }
 }

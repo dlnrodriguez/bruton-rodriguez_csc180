@@ -37,7 +37,7 @@ public class Browse {
 
         try {
             URL url = new URL(webAddress);
-            dln.printm(MSG.SUCC, Browse.class, "Loaded page '%s' successfully!", url.toExternalForm());
+            dln.printm(MSG.SCSF, Browse.class, "Loaded page '%s' successfully!", url.toExternalForm());
             openTabs.add(new Tab(webAddress));
             Window.webEngine.load(webAddress);
         } catch (MalformedURLException ignore) {
@@ -56,7 +56,7 @@ public class Browse {
 
         try {
             new URL(stringUrl);
-            dln.printm(MSG.SUCC, getClass(), "Successfully searched for \'%s\'", searchQuery);
+            dln.printm(MSG.SCSF, getClass(), "Successfully searched for \'%s\'", searchQuery);
         } catch (MalformedURLException e) {
             dln.printm(ERR.LOAD, getClass(), "Could not search for \'%s\', web address attempted: \'%s\'", searchQuery, stringUrl);
         }
@@ -66,7 +66,7 @@ public class Browse {
     /**
      * Returns a reachable web address.
      */
-    private static String getUrl(String webAddress) {
+    public static String getUrl(String webAddress) {
         // scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
 
         // any combinations of letters, digits, plus,
@@ -80,41 +80,41 @@ public class Browse {
         // hostname or ip address. IPv4 must be in
         // dot-decimal notation. IPv6 must be enclosed in
         // brackets.
-        String hostname = "(?<hostname>[\\p{Alnum}\\-+]+)";
+        String hostname = "(?<hostname>[\\p{LD}\\-.+]+)";
         String host_ipv4 = "(?<hostipv4>(\\d{1,3}\\.){3}\\d{1,3})";
         String host_ipv6 = "(?<hostipv6>(\\[\\d]))";
 
-        String host = "(?<host>" + hostname + '|' + host_ipv4 + '|' + host_ipv6 + ')';
+        String host = "(?<host>" + hostname + '|' + host_ipv4 + '|' + host_ipv6 + ")/?";
         //String host = "(?<host>" + hostname + ')';
 
         // port number. (optional)
-        String port = "(?<portnumber>:\\d{0,3}\\.)?";
+        String port = "(:(?<portnumber>\\d{0,3}))?";
 
         //
-        String path = "(?<path>(\\S+))";
+        String path = "(/(?<path>((\\p{Alnum})/?)+))?";
 
         //
-        String query = "(?<query>(\\?\\S+))?";
+        String query = "(\\?(?<query>([\\p{LD}&;=])+))?";
 
         //
-        String fragment = "(?<fragment>(#\\S+))?";
+        String fragment = "(#(?<fragment>(\\S+)))?";
 
         //
         String authority = user_password + host + port;
 
-        Pattern f = Pattern.compile(scheme + "(//)?(" + authority + "/)?" + path + query + fragment);
+        Pattern f = Pattern.compile('(' + scheme + "//)?" + authority + path + query + fragment);
         java.util.regex.Matcher matcher = f.matcher(webAddress);
 
         if (matcher.matches()) {
-            dln.printf(webAddress + "\n" +
-                               "\tscheme = '%s'\n" +
-                               "\tusername = '%s'\n" +
-                               "\tpassword = '%s'\n" +
-                               "\thost = '%s'\n" +
-                               "\tport_number = '%s'\n" +
-                               "\tpath = '%s'\n" +
-                               "\tquery = '%s'\n" +
-                               "\tfragment = '%s'\n"
+            dln.printm(MSG.SCSF, Browse.class, "Web url detected, " + webAddress + " [" +
+                               "scheme='%s', " +
+                               "username='%s', " +
+                               "password='%s', " +
+                               "host='%s', " +
+                               "port number='%s', " +
+                               "path='%s', " +
+                               "query='%s', " +
+                               "fragment='%s']"
                        //////////////////////////////
                     , matcher.group("scheme")
                     , matcher.group("username")
@@ -125,11 +125,12 @@ public class Browse {
                     , matcher.group("query")
                     , matcher.group("fragment"));
 
+            if (matcher.group("scheme") == null) return "http://" + webAddress;
             return webAddress;
         }
 
         dln.printm(ERR.FRMT, Browse.class, "URL '%s'", webAddress);
 
-        return "http://" + webAddress;
+        return null;
     }
 }

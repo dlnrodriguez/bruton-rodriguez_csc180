@@ -62,8 +62,10 @@ public abstract class E {
             // if the provided enum is a known error, give
             // it special formatting and provide the in
             // which the error occurred
-            if (e instanceof ERR) stream.printf("* { %s, %s.class } - ", e.name(), c.getSimpleName());
-            else stream.printf("[ %s ] - ", e.name());
+            if (e instanceof ERR) {
+                stream.printf("-> %s, %s.class\n * ", e.name(), c.getSimpleName());
+                format = format.replaceAll("\n", "\n * ");
+            } else stream.printf("   %s - ", e.name());
             return stream.printf(format + '\n', args);
         }
     }

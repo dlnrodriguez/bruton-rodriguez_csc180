@@ -7,4 +7,6 @@
  */
 
 Browse was initialized.
-[ SUCC ] - Successfully closed.
+   SCSF - Web url detected, 17.142.160.59 [scheme='null', username='null', password='null', host='17.142.160.59', port number='null', path='null', query='null', fragment='null']
+   SCSF - Loaded page 'http://17.142.160.59' successfully!
+   SCSF - Successfully closed.

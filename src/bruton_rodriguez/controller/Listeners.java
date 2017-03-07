@@ -1,20 +1,15 @@
 package bruton_rodriguez.controller;
 
 import bruton_rodriguez.model.Browse;
-import bruton_rodriguez.view.TaskBar;
-import bruton_rodriguez.view.Window;
-import bruton_rodriguez.view.gui.Head;
 import javafx.application.Platform;
-import javafx.scene.web.WebEngine;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 /**
  * Created by dylonrodriguez on 2/23/17.
  */
-public class Listeners implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
+public class Listeners implements ActionListener, MouseListener, MouseMotionListener, KeyListener, WindowListener {
     private int px, py;
 
     @Override
@@ -42,7 +37,7 @@ public class Listeners implements ActionListener, MouseListener, MouseMotionList
         if (e.getComponent() instanceof JButton) {
             JButton t = (JButton) e.getComponent();
             if (t.getName().equals("go")) {
-                Platform.runLater(() -> Browse.loadPage(Browser_engine.getWindow().url()));
+                Platform.runLater(() -> Browse.loadPage(Browser_engine.getUrl()));
             }
         }
     }
@@ -86,6 +81,41 @@ public class Listeners implements ActionListener, MouseListener, MouseMotionList
 
     @Override
     public void mouseMoved(MouseEvent e) {
+
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
 
     }
 }
